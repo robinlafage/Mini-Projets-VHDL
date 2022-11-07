@@ -27,18 +27,18 @@ begin
   begin
     rst_tb <= '0';
     enable_tb <= '1';
-    wait for 15 ms;
+    wait for 20 ms;
   
     rst_tb <= '0';
     enable_tb <= '0';
-    wait for 50 ms;
+    wait for 30 ms;
 
     rst_tb <= '1';
     enable_tb <= '1';
-    wait for 10 ms;
+    wait for 20 ms;
 
     rst_tb <= '1';
     enable_tb <= '0';
-    wait for 20 ms;
+    wait for 30 ms;
   end process;  
 end test_compteur;
