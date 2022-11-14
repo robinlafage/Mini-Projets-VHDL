@@ -28,17 +28,12 @@ begin
   begin
     if clk'event and clk = '1' then
         if rst = '1' then
-            out_count_i <= "0000";
+            out_count_i <= (others => '0');
         elsif enable = '1' then
-            if out_count_i = "1110" then
-                deb <= '1';
-                out_count_i <= "1111";
-            elsif out_count_i = "1111" then
-                deb <= '0';
-                out_count_i <= "0000";
+            if out_count_i = C_MODULO-1 then -- max
+                out_count_i <= (others => '0');
             else
                 out_count_i <= out_count_i + 1;
-                deb <= '0';
             end if ;
         end if;    
     end if;
