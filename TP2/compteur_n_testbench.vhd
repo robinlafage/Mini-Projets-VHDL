@@ -2,11 +2,11 @@ LIBRARY IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity test_compteur_16 is
-end test_compteur_16;
+entity test_compteur_n is
+end test_compteur_n;
 
 
-architecture test_compteur of test_compteur_16 is
+architecture test_compteur of test_compteur_n is
   --inputs
   signal clk_tb : STD_LOGIC := '0';
   signal rst_tb : STD_LOGIC := '0';
@@ -18,7 +18,7 @@ architecture test_compteur of test_compteur_16 is
 
 begin
 
-  tst: entity work.compteur_16(compteur)
+  tst: entity work.compteur_n(compteur)
     port map (clk => clk_tb,
     rst => rst_tb,
     enable => enable_tb,
