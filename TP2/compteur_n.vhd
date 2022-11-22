@@ -3,16 +3,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity compteur_N is
-Generic (
-C_NB_BIT_COUNTER : integer;
-C_MODULO : integer
-);
-Port ( clk : in STD_LOGIC;
-rst : in STD_LOGIC;
-enable : in STD_LOGIC;
-max : out STD_LOGIC := '0';
-out_count : out STD_LOGIC_VECTOR (C_NB_BIT_COUNTER - 1 downto 0)
-);
+	Generic (
+		C_NB_BIT_COUNTER : integer;
+		C_MODULO : integer
+	);
+	Port ( clk : in STD_LOGIC;
+		rst : in STD_LOGIC;
+		enable : in STD_LOGIC;
+		max : out STD_LOGIC := '0';
+		out_count : out STD_LOGIC_VECTOR (C_NB_BIT_COUNTER - 1 downto 0)
+	);
 end compteur_N;
 
 architecture arch_compteur of compteur_N is
@@ -24,14 +24,14 @@ begin
 			if (rst = '1') then --reset synchrone
 				cnt <= (others => '0');
 			elsif (enable = '1') then
-				if (cnt = C_MODULO-2) then --cas avant débordement
+				if (cnt = C_MODULO-2) then --cas avant dï¿½bordement
 					max <= '1';
 					cnt <= cnt+1;
-				elsif (cnt = C_MODULO-1) then --cas du débordement
+				elsif (cnt = C_MODULO-1) then --cas du dï¿½bordement
 				    max <= '0';
 					cnt <= (others => '0');
 				else
-					cnt <= cnt+1; --si pas de débordement on compte normalement
+					cnt <= cnt+1; --si pas de dï¿½bordement on compte normalement
 				end if;
 			end if;
 		end if;
