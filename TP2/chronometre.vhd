@@ -13,7 +13,7 @@ entity chronometer is
 end chronometer;
 
 architecture Behavioral of chronometer is
-    signal out_count_clk : STD_LOGIC;
+    signal out_count_clk : STD_LOGIC_VECTOR (25 downto 0);
     signal max_clk, max_seconds, max_minutes : STD_LOGIC := '0';
     begin
         compteur_clk : entity work.compteur_n
@@ -28,7 +28,7 @@ architecture Behavioral of chronometer is
                 max => max_clk,
                 out_count => out_count_clk
             );
-        
+    
         compteur_seconds : entity work.compteur_n
             generic map(
                 C_NB_BIT_COUNTER => 8,
@@ -41,7 +41,7 @@ architecture Behavioral of chronometer is
                 max => max_seconds,
                 out_count => seconds
             );
-            
+    
         compteur_minutes : entity work.compteur_n
             generic map(
                 C_NB_BIT_COUNTER => 8,
@@ -54,6 +54,27 @@ architecture Behavioral of chronometer is
                 max => max_minutes,
                 out_count => minutes
             );
+    
+        p_chrono : process(clk)
+        begin
+            if (clk'event and clk = '1') then
+                if (rst = '1') then --reset synchrone
+                    out_count_clk <= (others => '0');
+                    minutes <= '0';
+                    seconds <= '0';
+                elsif (start = '1') then
+                    if (max_clk = 1) then 
+                        --incrémenter secondes
+                    elsif (max_seconds = 1) then 
+                        --incrémenter minutes
+                    elsif (max_minutes = 1) then
+                        rst <= '1';
+                    else
+                        out_count_clk <= out_count_clk+1; --si pas de debordement on compte normalement
+                    end if;
+                end if;
+            end if;
+        end process;
 end Behavioral;
 
 
@@ -83,11 +104,6 @@ end Behavioral;
 --                end if;
 --            end if;
 --        end process;
-
-
--- 26 bits pour coder 50Mhz, 6 bits pour coder 60 secondes, 6 bits pour coder 60 minutes, 3 bits pour coder les 3 max
--- 41 bits donc 41 bascules 
--- Secondes et Minutes sont fixés sur 8 bits dans l'entity, étrange 
 
 
 -- 26 bits pour coder 50Mhz, 6 bits pour coder 60 secondes, 6 bits pour coder 60 minutes, 3 bits pour coder les 3 max
