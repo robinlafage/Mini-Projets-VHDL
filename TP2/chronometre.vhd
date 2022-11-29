@@ -14,7 +14,7 @@ end chronometer;
 
 architecture Behavioral of chronometer is
     signal out_count_clk : STD_LOGIC_VECTOR (25 downto 0);
-    signal max_clk, max_seconds, max_minutes : STD_LOGIC := '0';
+    signal max_clk, max_seconds, max_minutes, start_seconds, start_minutes : STD_LOGIC := '0';
     begin
         compteur_clk : entity work.compteur_n
             generic map(
@@ -37,7 +37,7 @@ architecture Behavioral of chronometer is
             port map(
                 clk => clk,
                 rst => rst,
-                enable => start,
+                enable => start_seconds,
                 max => max_seconds,
                 out_count => seconds
             );
@@ -50,7 +50,7 @@ architecture Behavioral of chronometer is
             port map(
                 clk => clk,
                 rst => rst,
-                enable => start,
+                enable => start_minutes,
                 max => max_minutes,
                 out_count => minutes
             );
@@ -58,19 +58,23 @@ architecture Behavioral of chronometer is
         p_chrono : process(clk)
         begin
             if (clk'event and clk = '1') then
+                start_seconds <= '0';
+                start_minutes <= '0';
                 if (rst = '1') then --reset synchrone
                     out_count_clk <= (others => '0');
-                    minutes <= '0';
-                    seconds <= '0';
+                    minutes (others => '0');
+                    seconds (others => '0');
                 elsif (start = '1') then
                     if (max_clk = 1) then 
-                        --incrémenter secondes
-                    elsif (max_seconds = 1) then 
-                        --incrémenter minutes
-                    elsif (max_minutes = 1) then
+                        start_seconds <= '1';
+                    end if
+                    if (max_seconds = 1) then 
+                        start_minutes <= '1';
+                    end if
+                    if (max_minutes = 1) then
                         rst <= '1';
                     else
-                        out_count_clk <= out_count_clk+1; --si pas de debordement on compte normalement
+                        --clk censé compter seul, mais sinon : out_count_clk <= out_count_clk+1;
                     end if;
                 end if;
             end if;
